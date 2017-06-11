@@ -1,0 +1,76 @@
+from ABE_ADCPi import ADCPi
+from ABE_helpers import ABEHelpers
+import time
+import os
+import paho.mqtt.client as mqtt
+from pathlib import Path
+from datetime import date
+import json
+import time
+import struct
+import array
+
+
+TOPICS = [
+	'$SYS/raw/A1x'
+	'$SYS/raw/A1y'
+	'$SYS/raw/FLdamp'
+	'$SYS/raw/FRdamp'
+	'$SYS/raw/RLdamp'
+	'$SYS/raw/RRdamp'
+	'$SYS/raw/Current1'
+	'$SYS/raw/Steerpos'
+]
+data= array.array('c')
+
+i2c_helper = ABEHelpers() //inizializzazioni standard
+bus = i2c_helper.get_smbus()
+adc = ADCPi(bus, 0x68, 0x69, 14)
+
+//send_Frame(can id, time):
+
+
+mqttc = mqtt.Client("ADC")
+mqttc.connect("localhost", 1883, 60)
+client.loop_start()
+
+while (True):
+    //lettura dei sensori 
+	acc1 = adc.read_raw(1))
+	data[0] = acc1 >> 8
+	data[1] = acc1
+	acc2 = adc.read_raw(2))
+    data[2] = acc1 >> 8
+	data[3] = acc1
+    FLdamp = adc.read_raw(3))
+    data[0] = acc1 >> 8
+	data[1] = acc1
+    FRdamp = adc.read_raw(4))
+	data[2] = acc1 >> 8
+	data[3] = acc1
+    RLdamp = adc.read_raw(5))
+	data[4] = acc1 >> 8
+	data[5] = acc1
+    RRdamp= adc.read_raw(6))
+	data[6] = acc1 >> 8
+	data[7] = acc1
+    current = adc.read_raw(7))
+	data[0] = acc1 >> 8
+	data[1] = acc1
+    steering = adc.read_raw(8))
+	data[4] = acc1 >> 8
+	data[5] = acc1
+    
+    //pubblicazione su mosquitto publish(topic, payload=None, qos=0, retain=False)
+    
+   
+    mqttc.publish(TOPICS[0],{'time: value, id: 747, data []}',1)
+    mqttc.publish(TOPICS[1],{'time: value, id: 747, data []}',1)
+    mqttc.publish(TOPICS[2],{'time: value, id: 748, data []}' ,1)
+    mqttc.publish(TOPICS[3],{'time: value, id: 748, data []}',1)
+    mqttc.publish(TOPICS[4],{'time: value, id: 748, data []}',1)
+    mqttc.publish(TOPICS[5],{'time: value, id: 748, data []}',1)
+    mqttc.publish(TOPICS[6],{'time: value, id: 749, data []}',1)
+    mqtcc.publish(TOPICS[7],{'time: value, id: 747, data []}',1)
+
+time.sleep(0.5)
